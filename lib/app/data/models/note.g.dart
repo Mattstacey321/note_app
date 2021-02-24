@@ -17,29 +17,27 @@ class NoteAdapter extends TypeAdapter<Note> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Note(
-      title: fields[0] as String,
-      content: fields[1] as String,
-      dateTime: fields[2] as DateTime,
-      isPrivate: fields[3] as bool,
-      type: fields[4] as String,
-    )..tasks = (fields[5] as List)?.cast<Task>();
+      id: fields[0] as String,
+      title: fields[1] as String,
+      content: fields[2] as String,
+      dateTime: fields[3] as DateTime,
+      tasks: (fields[4] as List)?.cast<Task>(),
+    );
   }
 
   @override
   void write(BinaryWriter writer, Note obj) {
     writer
-      ..writeByte(6)
-      ..writeByte(0)
-      ..write(obj.title)
-      ..writeByte(1)
-      ..write(obj.content)
-      ..writeByte(2)
-      ..write(obj.dateTime)
-      ..writeByte(3)
-      ..write(obj.isPrivate)
-      ..writeByte(4)
-      ..write(obj.type)
       ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.title)
+      ..writeByte(2)
+      ..write(obj.content)
+      ..writeByte(3)
+      ..write(obj.dateTime)
+      ..writeByte(4)
       ..write(obj.tasks);
   }
 
@@ -65,18 +63,21 @@ class TaskAdapter extends TypeAdapter<Task> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return Task(
-      title: fields[0] as String,
-      isDone: fields[1] as bool,
+      id: fields[0] as String,
+      title: fields[1] as String,
+      isDone: fields[2] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Task obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
-      ..write(obj.title)
+      ..write(obj.id)
       ..writeByte(1)
+      ..write(obj.title)
+      ..writeByte(2)
       ..write(obj.isDone);
   }
 

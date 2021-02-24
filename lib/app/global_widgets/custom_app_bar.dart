@@ -42,7 +42,6 @@ class CustomAppBar extends PreferredSize {
               Positioned(
                 child: Row(
                   mainAxisAlignment: childAlignment,
-                  mainAxisSize: MainAxisSize.max,
                   children: [for (var widget in childs) widget],
                 ),
               ),
@@ -53,6 +52,7 @@ class CustomAppBar extends PreferredSize {
                   onTapBack == null
                       ? SizedBox()
                       : CircleIcon(
+                        tooltip: "Back",
                           onTap: () {
                             return onTapBack == null ? Navigator.of(context).pop() : onTapBack();
                           },
@@ -62,12 +62,12 @@ class CustomAppBar extends PreferredSize {
               Positioned(right: 0, child: menu)
             ],
           ),
-           tabBar == null ? SizedBox(): SizedBox(height: 20),
+          tabBar == null ? SizedBox() : SizedBox(height: 20),
           tabBar == null
               ? SizedBox()
               : Container(
-                child: tabBar,
-              ),
+                  child: tabBar,
+                ),
         ],
       ),
     );

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:note_app/app/constraints/assets_path.dart';
-import 'package:note_app/app/routes/app_pages.dart';
 import 'package:note_app/app/theme/app_style.dart';
-import 'package:note_app/app/theme/index.dart';
 
 import '../controllers/startup_controller.dart';
 
@@ -42,7 +39,7 @@ class StartupView extends GetView<StartupController> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Get.offAndToNamed(Routes.HOME);
+                      controller.getStarted();
                     },
                     style: AppStyles.getStartedButtonStyle,
                     child: Text("Get Started"),

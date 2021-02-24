@@ -5,31 +5,31 @@ part 'note.g.dart';
 @HiveType(typeId: 0)
 class Note extends HiveObject {
   @HiveField(0)
-  String title;
+  String id;
   @HiveField(1)
-  String content;
+  String title;
   @HiveField(2)
-  DateTime dateTime;
+  String content;
   @HiveField(3)
-  bool isPrivate;
+  DateTime dateTime;
   @HiveField(4)
-  String type;
-  @HiveField(5)
   List<Task> tasks;
   Note({
+    @required this.id,
     @required this.title,
     @required this.content,
     @required this.dateTime,
-    this.isPrivate = false,
-    @required this.type,
+    @required this.tasks,
   });
 }
 
 @HiveType(typeId: 1)
 class Task extends HiveObject {
   @HiveField(0)
-  String title;
+  String id;
   @HiveField(1)
+  String title;
+  @HiveField(2)
   bool isDone;
-  Task({@required this.title, this.isDone = false});
+  Task({this.id, @required this.title, this.isDone = false});
 }

@@ -3,19 +3,35 @@ import 'package:flutter/material.dart';
 class CircleIcon extends StatelessWidget {
   final Icon icon;
   final VoidCallback onTap;
-  CircleIcon({this.onTap, this.icon});
+  final Color bgColor;
+  final String tooltip;
+  CircleIcon({@required this.onTap, @required this.icon, this.bgColor, @required this.tooltip});
   @override
   Widget build(BuildContext context) {
+    final double iconSize = 25;
     return Material(
       color: Colors.transparent,
-      child: InkWell(
-        splashColor: Colors.grey[200],
-        borderRadius: BorderRadius.circular(1000),
-        onTap: onTap,
-        child: Container(
-          height: 40,
-          width: 40,
-          child:(icon)
+      child: Tooltip(
+        message: tooltip,
+        child: InkWell(
+          splashColor: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(1000),
+          onTap: onTap,
+          child: Container(
+            height: iconSize,
+            width: iconSize,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(1000),
+              color: bgColor,
+            ),
+            child: IconTheme(
+              data: IconThemeData(
+                size: iconSize - 10,
+                color: Colors.white,
+              ),
+              child: icon,
+            ),
+          ),
         ),
       ),
     );

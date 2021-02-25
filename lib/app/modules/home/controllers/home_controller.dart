@@ -7,6 +7,8 @@ import 'package:note_app/app/data/services/note_services.dart';
 import 'package:note_app/app/data/services/private_note_services.dart';
 import 'package:note_app/app/modules/home/views/all_folder_view.dart';
 import 'package:note_app/app/modules/home/views/all_note_view.dart';
+import 'package:note_app/app/routes/app_pages.dart';
+import 'package:note_app/app/utils/dialog_utils.dart';
 
 class HomeController extends GetxController with SingleGetTickerProviderMixin {
   TabController tabController;
@@ -16,13 +18,13 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
   PrivateNoteServices _privateNoteService = PrivateNoteServices();
   var notes = <Note>[].obs;
   var privateNoteIndex = <String>[];
-
   var folders = <NoteFolder>[].obs;
   var tabViews = <Map<String, dynamic>>[
     {"name": "All", "page": AllNoteView()},
     {"name": "Folder", "page": AllFolderView()}
   ];
   var currentIndex = 0.obs;
+  var editMode = false.obs;
 
   void initData() async {
     var noteList = _noteServices.getNotes();
@@ -37,8 +39,19 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
     folders.addAll(noteFolder);
   }
 
+  void editNote(bool hasPassword, String noteId) {
+    hasPassword
+        ? DialogUtils().enterPassword(noteId)
+        : Get.toNamed(Routes.EDIT_NOTE, arguments: noteId);
+  }
+
   void onPageChange(int index) {
     currentIndex.value = index;
+    tabController.animateTo((tabController.index + 1) % 2);
+  }
+
+  void changeToEditMode() {
+    editMode.toggle();
   }
 
   @override

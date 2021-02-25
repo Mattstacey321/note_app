@@ -26,11 +26,13 @@ class AllNoteView extends GetView<HomeController> {
             scrollDirection: Axis.vertical,
             itemCount: res.length,
             itemBuilder: (context, index) {
-              bool hasPassword = BaseServices().notePassword(res[index].id) == null ? false : true;
+              final String noteId = res[index].id;
+              bool hasPassword = BaseServices().notePassword(noteId) == null ? false : true;
               return NoteItem(
                 res[index],
                 onTap: () {
                   // edit note
+                  controller.editNote(hasPassword, noteId);
                 },
                 hasPassword: hasPassword,
               );

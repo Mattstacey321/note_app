@@ -11,7 +11,10 @@ class BaseServices {
   var folderBox = Hive.box<NoteFolder>(HiveBoxName.noteFolder);
   var noteRelBox = Hive.box<NoteRel>(HiveBoxName.noteRelBox);
 
-  int countNoteByFolder() {}
+  int countNoteByFolder(String folderId) {
+    int count = 0;
+    return count;
+  }
 
   List<String> getFolderByNoteId(String id) {
     var listFolderId =

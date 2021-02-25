@@ -11,8 +11,15 @@ class EditNoteView extends GetView<EditNoteController> {
     return Scaffold(
       appBar: CustomAppBar(
         childs: [],
+        onTapBack: () => Get.back(),
       ),
-      body: Container(),
+      body: Container(
+        height: Get.height,
+        width: Get.width,
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
     );
   }
 }

@@ -12,7 +12,8 @@ class AddFolderView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
-        childs: [SizedBox(width : 40),
+        childs: [
+          SizedBox(width: 40),
           Text(
             "Folder",
             style: TextStyle(
@@ -54,7 +55,8 @@ class AddFolderView extends StatelessWidget {
                   Flexible(
                     child: TextField(
                       controller: controller.folderNameCtrl,
-                      decoration: InputDecoration.collapsed(hintText: "Folder name"),
+                      onChanged: (value) => controller.checkFolderName(value),
+                      decoration: InputDecoration.collapsed(hintText: "Name"),
                     ),
                   ),
                   Flexible(
@@ -62,10 +64,35 @@ class AddFolderView extends StatelessWidget {
                       children: <Widget>[
                         Text("Private"),
                         Spacer(),
-                        Switch(value: false, onChanged: (value) {})
+                        ObxValue(
+                          (res) {
+                            return Switch(
+                              value: res.value,
+                              onChanged: (_) => controller.changePrivateMode(),
+                            );
+                          },
+                          controller.isPrivate,
+                        )
                       ],
                     ),
-                  )
+                  ),
+                  Flexible(
+                    child: ObxValue(
+                      (res) {
+                        return AnimatedOpacity(
+                          duration: 200.milliseconds,
+                          opacity: res.value ? 1 : 0,
+                          child: TextField(
+                            controller: controller.passwordCtrl,
+                            obscureText: true,
+                            onChanged: (value) => controller.checkTypingPassword(value),
+                            decoration: InputDecoration.collapsed(hintText: "Password"),
+                          ),
+                        );
+                      },
+                      controller.isPrivate,
+                    ),
+                  ),
                 ],
               ),
             )

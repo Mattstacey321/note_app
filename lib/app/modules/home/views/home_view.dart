@@ -13,7 +13,6 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: CustomAppBar(
         childAlignment: MainAxisAlignment.start,
-        childPadding: 20,
         childs: [
           Text(
             "Notes",

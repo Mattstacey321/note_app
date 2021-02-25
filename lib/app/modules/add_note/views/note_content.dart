@@ -22,7 +22,6 @@ class NoteContent extends GetView<AddNoteController> {
           )
         ],
         childAlignment: MainAxisAlignment.start,
-        childPadding: 10,
         homeIcon: Icon(
           EvaIcons.close,
           color: Colors.grey,

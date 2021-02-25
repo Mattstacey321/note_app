@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
 import 'package:note_app/app/data/models/folder.dart';
+import 'package:note_app/app/data/services/base_services.dart';
 import 'package:note_app/app/global_widgets/circle_icon.dart';
 import 'package:note_app/app/modules/home/controllers/home_controller.dart';
-import 'package:note_app/app/routes/app_pages.dart';
 import 'package:note_app/app/theme/app_colors.dart';
 
 class AllFolderView extends GetView<HomeController> {
@@ -29,14 +29,17 @@ class AllFolderView extends GetView<HomeController> {
               return ObxValue<RxBool>(
                 (res) {
                   final folderId = folders[index].id;
+                  var isFolderPrivate =
+                      BaseServices().isFolderPrivate(folderId) == null ? false : true;
                   return FolderItem(
                     folders[index],
                     onTap: () {
-                      Get.toNamed(Routes.NOTEBYFOLDER, arguments: folderId);
+                      controller.viewFolder(isFolderPrivate, folderId);
                     },
                     onLongPress: () {
                       controller.changeToEditMode();
                     },
+                    isPrivate: isFolderPrivate,
                     editMode: res.value,
                   );
                 },
@@ -44,7 +47,7 @@ class AllFolderView extends GetView<HomeController> {
               );
             },
             staggeredTileBuilder: (index) {
-              return StaggeredTile.count(1, index.isEven ? 1.2 : 1.1);
+              return StaggeredTile.count(1, index.isEven ? 1.2 : 1.2);
             },
           );
         },
@@ -59,8 +62,14 @@ class FolderItem extends StatelessWidget {
   final Function onTap;
   final Function onLongPress;
   final bool editMode;
-  FolderItem(this.folder,
-      {@required this.onTap, @required this.onLongPress, this.editMode = false});
+  final bool isPrivate;
+  FolderItem(
+    this.folder, {
+    @required this.onTap,
+    @required this.onLongPress,
+    this.editMode = false,
+    this.isPrivate = false,
+  });
   @override
   Widget build(BuildContext context) {
     return Listener(
@@ -81,7 +90,8 @@ class FolderItem extends StatelessWidget {
                 top: 10,
                 right: 10,
                 child: AnimatedOpacity(
-                  duration: 200.milliseconds,curve: Curves.fastOutSlowIn,
+                  duration: 200.milliseconds,
+                  curve: Curves.fastOutSlowIn,
                   opacity: editMode ? 1 : 0,
                   child: CircleIcon(
                     onTap: () {},
@@ -106,7 +116,25 @@ class FolderItem extends StatelessWidget {
                         ),
                       ),
                     ),
-                    Expanded(child: Text(folder.folderName))
+                    Expanded(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            isPrivate ? Icon(EvaIcons.lock) : SizedBox(),
+                            SizedBox(width: isPrivate ? 5 : 0),
+                            Text(
+                              folder.folderName,
+                              style: TextStyle(
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ))
                   ],
                 ),
               ),

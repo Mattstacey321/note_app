@@ -34,20 +34,26 @@ class HomeController extends GetxController with SingleGetTickerProviderMixin {
         privateNoteIndex.add(item.id);
       }
     }
-
     notes.addAll(noteList);
     folders.addAll(noteFolder);
   }
 
-  void editNote(bool hasPassword, String noteId) {
+  void viewNote(bool hasPassword, String noteId) {
     hasPassword
-        ? DialogUtils().enterPassword(noteId)
+        ? DialogUtils().enterPassword("note", id: noteId)
         : Get.toNamed(Routes.EDIT_NOTE, arguments: noteId);
   }
 
+  void viewFolder(bool hasPassword, String noteId) {
+    hasPassword
+        ? DialogUtils().enterPassword("folder", id: noteId)
+        : Get.toNamed(Routes.NOTEBYFOLDER, arguments: noteId);
+  }
+
+
   void onPageChange(int index) {
     currentIndex.value = index;
-    tabController.animateTo((tabController.index + 1) % 2);
+    //tabController.animateTo((tabController.index + 1) % 2);
   }
 
   void changeToEditMode() {

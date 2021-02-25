@@ -72,7 +72,25 @@ class DialogUtils {
       return Future.value(false);
   }
 
-  Future enterPassword(String noteId) async {
+  void verifyNotePassword(String noteId, TextEditingController passwordCtrl) {
+    final notePwd = _baseServices.isNotePrivate(noteId).password;
+    final userTypePwd = passwordCtrl.text;
+    if (notePwd == userTypePwd) {
+      Get.offAndToNamed(Routes.EDIT_NOTE, arguments: noteId);
+    } else
+      BotToast.showText(text: "Wrong password");
+  }
+
+  void verifyFolderPassword(String folderId, TextEditingController passwordCtrl) {
+    final folderPwd = _baseServices.isFolderPrivate(folderId).password;
+    final userTypePwd = passwordCtrl.text;
+    if (folderPwd == userTypePwd) {
+      Get.offAndToNamed(Routes.NOTEBYFOLDER, arguments: folderId);
+    } else
+      BotToast.showText(text: "Wrong password");
+  }
+
+  Future enterPassword(String type, {@required String id}) async {
     Get.generalDialog(
       transitionDuration: Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
@@ -130,12 +148,9 @@ class DialogUtils {
                         TextButton(
                           onPressed: () {
                             //verify password
-                            final notePwd = _baseServices.notePassword(noteId).password;
-                            final userTypePwd = passwordCtrl.text;
-                            if (notePwd == userTypePwd) {
-                              Get.offAndToNamed(Routes.EDIT_NOTE, arguments: noteId);
-                            } else
-                              BotToast.showText(text: "Wrong password");
+                            type == "note"
+                                ? verifyNotePassword(id, passwordCtrl)
+                                : verifyFolderPassword(id, passwordCtrl);
                           },
                           child: Text("Confirm"),
                         ),

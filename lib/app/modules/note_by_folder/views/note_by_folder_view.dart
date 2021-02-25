@@ -19,7 +19,7 @@ class NoteByFolderView extends StatelessWidget {
           appBar: CustomAppBar(childs: [], onTapBack: () => Get.back()),
           body: ObxValue<RxList<Note>>(
             (res) {
-              if (res.isEmpty == true) return const Text("Empty Note");
+              if (res.isEmpty == true) return Center(child: const Text("Empty Note"));
               return StaggeredGridView.countBuilder(
                 crossAxisCount: 2,
                 crossAxisSpacing: 10,
@@ -28,12 +28,11 @@ class NoteByFolderView extends StatelessWidget {
                 scrollDirection: Axis.vertical,
                 itemCount: res.length,
                 itemBuilder: (context, index) {
-                  bool hasPassword =
-                      BaseServices().notePassword(res[index].id) == null ? false : true;
+                  final String noteId = res[index].id;
+                  bool hasPassword = BaseServices().isFolderPrivate(noteId) == null ? false : true;
                   return NoteItem(
                     res[index],
-                    onTap: () {
-                    },
+                    onTap: () {},
                     hasPassword: hasPassword,
                   );
                 },

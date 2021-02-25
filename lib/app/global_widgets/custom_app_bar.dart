@@ -39,10 +39,13 @@ class CustomAppBar extends PreferredSize {
           Stack(
             alignment: Alignment.center,
             children: [
+              //SizedBox(width: 40),
               Positioned(
                 child: Row(
                   mainAxisAlignment: childAlignment,
-                  children: [for (var widget in childs) widget],
+                  children: [
+                    for (var widget in childs) widget,
+                  ],
                 ),
               ),
               Row(
@@ -52,7 +55,7 @@ class CustomAppBar extends PreferredSize {
                   onTapBack == null
                       ? SizedBox()
                       : CircleIcon(
-                        tooltip: "Back",
+                          tooltip: "Back",
                           onTap: () {
                             return onTapBack == null ? Navigator.of(context).pop() : onTapBack();
                           },

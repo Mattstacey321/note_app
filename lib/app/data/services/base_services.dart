@@ -19,14 +19,17 @@ class BaseServices {
     print(listFolderId);
     return folderBox.values
         .where((item) => listFolderId.contains(item.id))
-        .map((e) => e.folderName).toList();
+        .map((e) => e.folderName)
+        .toList();
   }
 
   List<Note> getNoteByFolderId(String id) {
-    var listNoteId =
-        noteRelBox.values.where((e) => e.folderId == id).map((e) => e.noteId).toList();
+    var listNoteId = noteRelBox.values.where((e) => e.folderId == id).map((e) => e.noteId).toList();
     print(listNoteId);
-    return noteBox.values
-        .where((item) => listNoteId.contains(item.id)).toList();
+    return noteBox.values.where((item) => listNoteId.contains(item.id)).toList();
+  }
+
+  Private notePassword(String noteId) {
+    return privateBox.values.firstWhere((item) => item.id == noteId, orElse: () => null);
   }
 }

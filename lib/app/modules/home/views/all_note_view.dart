@@ -26,10 +26,13 @@ class AllNoteView extends GetView<HomeController> {
             scrollDirection: Axis.vertical,
             itemCount: res.length,
             itemBuilder: (context, index) {
+              bool hasPassword = BaseServices().notePassword(res[index].id) == null ? false : true;
               return NoteItem(
                 res[index],
-                hasPassword:
-                    controller.privateNoteIndex.contains((item) => (res[index].id == item)),
+                onTap: () {
+                  // edit note
+                },
+                hasPassword: hasPassword,
               );
             },
             staggeredTileBuilder: (index) {
@@ -46,38 +49,50 @@ class AllNoteView extends GetView<HomeController> {
 class NoteItem extends StatelessWidget {
   final Note note;
   final bool hasPassword;
-  NoteItem(this.note, {this.hasPassword = false});
+  final VoidCallback onTap;
+  NoteItem(this.note, {this.hasPassword = false, @required this.onTap});
   @override
   Widget build(BuildContext context) {
     var tasks = note.tasks ??= [];
-    return Container(
-      height: 200,
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(15), color: AppColors.itemColor),
-      padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            note.title,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          ),
-          Expanded(
-            child: Center(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        height: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: AppColors.itemColor,
+        ),
+        padding: EdgeInsets.fromLTRB(15, 20, 15, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              note.title,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+            Expanded(
               child: hasPassword
                   ? FittedBox(
-                      child: Icon(EvaIcons.lock),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Icon(
+                          EvaIcons.lock,
+                          color: Colors.grey,
+                        ),
+                      ),
                     )
                   : _buildItem(tasks),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildItem(List<Task> tasks) {
+    String folderName = BaseServices().getFolderByNoteId(note.id).first;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -103,8 +118,7 @@ class NoteItem extends StatelessWidget {
               TimeUtils.fullDate(note.dateTime),
               style: TextStyle(color: Colors.grey),
             ),
-            Text("${BaseServices().getFolderByNoteId(note.id).first}",
-                style: TextStyle(color: Colors.grey))
+            Text(folderName, style: TextStyle(color: Colors.grey))
           ],
         ),
       ],

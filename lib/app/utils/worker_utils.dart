@@ -2,7 +2,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_workers/rx_workers.dart';
 import 'package:note_app/app/modules/add_note/controllers/add_note_controller.dart';
 
 class WorkerUtils {
@@ -55,7 +54,7 @@ class WorkerUtils {
                           SizedBox(height: 15),
                           Expanded(
                             child: Container(
-                              child: ObxValue((res) {
+                              child: ObxValue<RxBool>((res) {
                                 bool hidePwd = res.value;
                                 return TextField(
                                   controller: passwordCtrl,

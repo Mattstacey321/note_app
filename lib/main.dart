@@ -2,7 +2,6 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import "package:hive_flutter/hive_flutter.dart";
 import 'package:note_app/app/data/db/hive_db.dart';
 import 'package:note_app/app/data/services/setting_services.dart';
@@ -15,11 +14,11 @@ void main() async {
   await Hive.initFlutter();
   await HiveDb.init();
   SettingServices settingServices = SettingServices();
-  SystemChrome.setEnabledSystemUIOverlays([]);
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   runApp(
     NotificationListener(
       onNotification: (OverscrollIndicatorNotification overScroll) {
-        overScroll.disallowGlow();
+        overScroll.disallowIndicator();
         return false;
       },
       child: GetMaterialApp(

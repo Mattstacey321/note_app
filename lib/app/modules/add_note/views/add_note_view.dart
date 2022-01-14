@@ -11,9 +11,17 @@ class AddNoteView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () {
-        return DialogUtils()
-            .isNoteHasContent(controller.pages.isEmpty, controller.isTaskTitleEmpty.value);
+      onWillPop: () async {
+        final res = await DialogUtils().isNoteHasContent(
+          controller.pages.isEmpty,
+          controller.isTaskTitleEmpty.value,
+        );
+
+        if (res == null || res == false) {
+          return true;
+        } else {
+          return false;
+        }
       },
       child: Navigator(
         key: Get.nestedKey(NavigatorKey.addNoteKey),

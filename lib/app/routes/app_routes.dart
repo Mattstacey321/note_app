@@ -8,6 +8,7 @@ abstract class Routes {
   static const ADDFOLDER = _Paths.ADDFOLDER;
   static const NOTEBYFOLDER = _Paths.NOTEBYFOLDER;
   static const EDIT_NOTE = _Paths.EDIT_NOTE;
+  static const SETTING = _Paths.SETTING;
 }
 
 abstract class _Paths {
@@ -17,4 +18,5 @@ abstract class _Paths {
   static const ADDFOLDER = '/add-folder';
   static const NOTEBYFOLDER = '/note-by-folder';
   static const EDIT_NOTE = '/edit-note';
+  static const SETTING = '/setting';
 }

@@ -10,6 +10,8 @@ import 'package:note_app/app/modules/edit_note/views/edit_note_view.dart';
 import 'package:note_app/app/modules/home/bindings/home_binding.dart';
 import 'package:note_app/app/modules/home/views/home_view.dart';
 import 'package:note_app/app/modules/note_by_folder/views/note_by_folder_view.dart';
+import 'package:note_app/app/modules/setting/bindings/setting_binding.dart';
+import 'package:note_app/app/modules/setting/views/setting_view.dart';
 import 'package:note_app/app/modules/startup/bindings/startup_binding.dart';
 import 'package:note_app/app/modules/startup/views/startup_view.dart';
 
@@ -46,6 +48,11 @@ class AppPages {
       name: _Paths.EDIT_NOTE,
       page: () => EditNoteView(),
       binding: EditNoteBinding(),
+    ),
+    GetPage(
+      name: _Paths.SETTING,
+      page: () => SettingView(),
+      binding: SettingBinding(),
     ),
   ];
 }

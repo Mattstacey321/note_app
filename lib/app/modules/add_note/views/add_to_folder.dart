@@ -66,10 +66,11 @@ class AddToFolder extends GetView<AddToFolderController> {
 
 class ItemBuilder extends GetView<AddToFolderController> {
   final NoteFolder folder;
-  final Function onTap;
+  final VoidCallback? onTap;
   ItemBuilder(this.folder, {this.onTap});
   @override
   Widget build(BuildContext context) {
+    final count = controller.totalNote(folder.id);
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -85,14 +86,14 @@ class ItemBuilder extends GetView<AddToFolderController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    folder.folderName,
+                    folder.name,
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                   SizedBox(
                     height: 5,
                   ),
                   Text(
-                    "0 note",
+                    "$count ${count > 0 ? "notes" : "note"} ",
                     style: TextStyle(color: Colors.grey),
                   )
                 ],
@@ -103,11 +104,12 @@ class ItemBuilder extends GetView<AddToFolderController> {
               child: ObxValue<RxList<String>>(
                 (res) {
                   return AnimatedCrossFade(
-                    duration: 200.milliseconds,
-                    crossFadeState: res.contains(folder.id) ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                    secondChild: Icon(EvaIcons.radioButtonOff, color: AppColors.buttonColor),
-                    firstChild:  Icon(EvaIcons.checkmarkCircle2, color: AppColors.buttonColor)
-                  );
+                      duration: 200.milliseconds,
+                      crossFadeState: res.contains(folder.id)
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      secondChild: Icon(EvaIcons.radioButtonOff, color: AppColors.buttonColor),
+                      firstChild: Icon(EvaIcons.checkmarkCircle2, color: AppColors.buttonColor));
                 },
                 controller.folderIds,
               ),

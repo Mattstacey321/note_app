@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:note_app/app/data/services/base_services.dart';
 import 'package:note_app/app/routes/app_pages.dart';
+import 'package:note_app/app/utils/index.dart';
 
 class DialogUtils {
   final _baseServices = BaseServices();
-  Future<bool> isNoteHasContent(bool isPageEmpty, bool isTitleEmpty) {
+  Future<bool?> isNoteHasContent(bool isPageEmpty, bool isTitleEmpty) async {
     if (!isPageEmpty || isTitleEmpty) {
-      return Get.generalDialog(
+      return Get.generalDialog<bool?>(
         transitionDuration: Duration(milliseconds: 200),
         pageBuilder: (context, animation, secondaryAnimation) {
           return Center(
@@ -72,29 +73,34 @@ class DialogUtils {
       return Future.value(false);
   }
 
-  void verifyNotePassword(String noteId, TextEditingController passwordCtrl) {
-    final notePwd = _baseServices.isNotePrivate(noteId).password;
-    final userTypePwd = passwordCtrl.text;
-    if (notePwd == userTypePwd) {
-      Get.offAndToNamed(Routes.EDIT_NOTE, arguments: noteId);
-    } else
+  Future<bool> verifyNotePassword(VerifyMode mode, String noteId, String password) {
+    final notePwd = _baseServices.getNotePassword(noteId);
+    if (notePwd == password) {
+      mode == VerifyMode.view ? Get.toNamed(Routes.EDIT_NOTE, arguments: noteId) : null;
+      return Future.value(true);
+    } else {
       BotToast.showText(text: "Wrong password");
+      return Future.value(false);
+    }
   }
 
-  void verifyFolderPassword(String folderId, TextEditingController passwordCtrl) {
-    final folderPwd = _baseServices.isFolderPrivate(folderId).password;
-    final userTypePwd = passwordCtrl.text;
-    if (folderPwd == userTypePwd) {
-      Get.offAndToNamed(Routes.NOTEBYFOLDER, arguments: folderId);
-    } else
+  Future<bool> verifyFolderPassword(VerifyMode mode, String folderId, String password) {
+    final folderPwd = _baseServices.getFolderPassword(folderId);
+    if (folderPwd == password) {
+      mode == VerifyMode.view ? Get.toNamed(Routes.NOTEBYFOLDER, arguments: folderId) : null;
+      return Future.value(true);
+    } else {
       BotToast.showText(text: "Wrong password");
+      return Future.value(false);
+    }
   }
 
-  Future enterPassword(String type, {@required String id}) async {
-    Get.generalDialog(
+  Future<dynamic> enterPassword(VerifyMode mode, VerifyType verifyType,
+      {required String id}) async {
+    final passwordCtrl = TextEditingController();
+    return Get.generalDialog(
       transitionDuration: Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) {
-        final passwordCtrl = TextEditingController();
         return Center(
           child: Material(
             borderRadius: BorderRadius.circular(10),
@@ -141,16 +147,16 @@ class DialogUtils {
                       children: <Widget>[
                         TextButton(
                           onPressed: () {
-                            Get.back();
+                            Get.back(result: false);
                           },
                           child: Text("Cancel"),
                         ),
                         TextButton(
                           onPressed: () {
-                            //verify password
-                            type == "note"
-                                ? verifyNotePassword(id, passwordCtrl)
-                                : verifyFolderPassword(id, passwordCtrl);
+                            Future.microtask(() => verifyType == VerifyType.note
+                                    ? verifyNotePassword(mode, id, passwordCtrl.text)
+                                    : verifyFolderPassword(mode, id, passwordCtrl.text))
+                                .then((value) => Get.back(result: value));
                           },
                           child: Text("Confirm"),
                         ),
@@ -171,6 +177,14 @@ class DialogUtils {
       },
       barrierDismissible: true,
       barrierLabel: "Enter password",
+    );
+  }
+
+  Future confirmEdit() {
+    return Get.generalDialog(
+      pageBuilder: (context, animation, secondaryAnimation) {
+        return Container();
+      },
     );
   }
 }

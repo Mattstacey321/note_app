@@ -1,7 +1,6 @@
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:note_app/app/data/models/note_component.dart';
 import 'package:note_app/app/global_widgets/custom_app_bar.dart';
 import 'package:note_app/app/modules/add_note/controllers/add_note_controller.dart';
@@ -55,7 +54,7 @@ class NoteContent extends GetView<AddNoteController> {
                       ),
                     ),
                     SizedBox(height: 10),
-                    ObxValue(
+                    ObxValue<RxInt>(
                       (res) => Text(
                         "${TimeUtils.fullDate(DateTime.now())} | ${res.value} words",
                         style: TextStyle(color: Colors.grey),
@@ -82,7 +81,7 @@ class NoteContent extends GetView<AddNoteController> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Expanded(child: res[index].widget),
-                              ObxValue(
+                              ObxValue<RxBool>(
                                 (res) {
                                   return res.value
                                       ? ReorderableDragStartListener(

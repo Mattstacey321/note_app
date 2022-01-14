@@ -21,7 +21,7 @@ class NoteAdapter extends TypeAdapter<Note> {
       title: fields[1] as String,
       content: fields[2] as String,
       dateTime: fields[3] as DateTime,
-      tasks: (fields[4] as List)?.cast<Task>(),
+      tasks: (fields[4] as List).cast<Task>(),
     );
   }
 

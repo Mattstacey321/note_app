@@ -17,20 +17,12 @@ class AddNoteController extends GetxController {
   TextEditingController contentCtrl = TextEditingController();
   TextEditingController passwordCtrl = TextEditingController();
   NoteServices _noteServices = NoteServices();
-  Worker worker;
   var titleLength = 0.obs;
   var isPrivateNote = false.obs;
   var password = "".obs;
   var countWord = 0.obs;
   var tasks = <Task>[].obs;
-  var pages = <NoteComponnent>[
-    NoteComponnent(
-      id: "note-content",
-      widget: NoteContentComponent(
-        key: UniqueKey(),
-      ),
-    ),
-  ].obs;
+  var pages = <NoteComponnent>[].obs;
   var taskMode = false.obs;
   var isTaskTitleEmpty = true.obs;
   var rearrangeMode = false.obs;
@@ -43,6 +35,10 @@ class AddNoteController extends GetxController {
 
   void checkTitleIsEmpty(String text) {
     titleLength.value = text.length;
+    // count when title change
+    ever(titleLength, (res) {
+      countWord.value = res as int;
+    });
   }
 
   void addTaskMode() {
@@ -58,24 +54,26 @@ class AddNoteController extends GetxController {
   }
 
   void addMoreTask() {
-    tasks.add(Task(id: UniqueKey().toString(), title: ""));
+    var key = Uuid().v1();
+    tasks.add(Task(id: key, title: ""));
     tasks.refresh();
   }
 
   void switchTaskMode() {
+    var key = Uuid().v1();
     if (!pages.any((element) => element.id == "list-task")) {
       addTaskMode();
     }
     if (taskMode.value) {
-      tasks.add(Task(id: UniqueKey().toString(), title: ""));
+      tasks.add(Task(id: key, title: ""));
     } else {
       taskMode.toggle();
     }
   }
 
   void completeTask(String id) {
-    tasks.singleWhere((element) => element.id == id).isDone =
-        !tasks.singleWhere((element) => element.id == id).isDone;
+    bool isDone = tasks.firstWhere((element) => element.id == id).isDone;
+    tasks.firstWhere((element) => element.id == id).isDone = !isDone;
     tasks.refresh();
     pages.refresh();
   }
@@ -88,7 +86,6 @@ class AddNoteController extends GetxController {
   }
 
   void updateTitle(String value, String id) {
-    print(id);
     tasks.firstWhere((element) => element.id == id).title = value;
     tasks.refresh();
     pages.refresh();
@@ -159,14 +156,15 @@ class AddNoteController extends GetxController {
 
   @override
   void onReady() {
-    WorkerUtils(worker).listenTitleChange(titleLength);
-    WorkerUtils(worker).setPassword(isPrivateNote);
+    // listenTitleChange(titleLength);
+    // setPassword(isPrivateNote);
+    pages.add(NoteComponnent(
+      id: "note-content",
+      widget: NoteContentComponent(
+        key: UniqueKey(),
+      ),
+    ));
     super.onReady();
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
   }
 
   @override

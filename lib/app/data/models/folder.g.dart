@@ -18,18 +18,21 @@ class NoteFolderAdapter extends TypeAdapter<NoteFolder> {
     };
     return NoteFolder(
       id: fields[0] as String,
-      folderName: fields[1] as String,
+      name: fields[1] as String,
+      createdDate: fields[2] as DateTime,
     );
   }
 
   @override
   void write(BinaryWriter writer, NoteFolder obj) {
     writer
-      ..writeByte(2)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.folderName);
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.createdDate);
   }
 
   @override

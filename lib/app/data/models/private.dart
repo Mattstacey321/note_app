@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 part 'private.g.dart';
@@ -11,5 +10,5 @@ class Private {
   String type;
   @HiveField(2)
   String password;
-  Private({@required this.id, this.type = "note", @required this.password});
+  Private({required this.id, this.type = "note", required this.password});
 }

@@ -15,96 +15,87 @@ class EditNoteView extends StatelessWidget {
       init: EditNoteController(noteId),
       builder: (controller) {
         return Scaffold(
-          appBar: CustomAppBar(
-            childs: [],
-            menu: UpdateButton(),
-            onTapBack: () => Get.back(),
-          ),
-          body: SingleChildScrollView(
-            child: Container(
-              height: Get.height,
-              width: Get.width,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                children: [
-                  //title
-                  Container(
-                    height: 80,
+            appBar: CustomAppBar(
+              childs: [],
+              menu: UpdateButton(),
+              onTapBack: () => Get.back(),
+            ),
+            body: Obx(() {
+              bool editMode = !controller.editMode.value;
+              return AbsorbPointer(
+                absorbing: editMode,
+                child: SingleChildScrollView(
+                  child: Container(
+                    height: Get.height,
                     width: Get.width,
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Flexible(
-                          child: TextField(
-                            controller: controller.titleCtrl,
-                            textCapitalization: TextCapitalization.characters,
-                            style: TextStyle(fontSize: 20),
-                            onChanged: (value) => controller.onTitleChange(value),
-                            decoration: InputDecoration.collapsed(hintText: "Title"),
+                        //title
+                        Container(
+                          height: 80,
+                          width: Get.width,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Flexible(
+                                child: TextField(
+                                  controller: controller.titleCtrl,
+                                  textCapitalization: TextCapitalization.characters,
+                                  style: TextStyle(fontSize: 20),
+                                  onChanged: (value) => controller.onTextChange(),
+                                  decoration: InputDecoration.collapsed(hintText: "Title"),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              ObxValue<RxInt>(
+                                (res) => Text(
+                                  "${TimeUtils.fullDate(DateTime.now())} | ${res.value} words",
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                controller.countWord,
+                              ),
+                            ],
                           ),
                         ),
-                        SizedBox(height: 10),
-                        ObxValue(
-                          (res) => Text(
-                            "${TimeUtils.fullDate(DateTime.now())} | ${res.value} words",
-                            style: TextStyle(color: Colors.grey),
+                        // write note area
+                        // load task, image if available
+                        Expanded(
+                          flex: 8,
+                          child: ObxValue<RxList<NoteComponnent>>(
+                            (res) => Container(
+                              width: Get.width,
+                              child: ReorderableListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    key: Key('$index'),
+                                    behavior: HitTestBehavior.translucent,
+                                    //onLongPress: () => controller.triggerRearrangeMode(),
+                                    child: Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Expanded(child: res[index].widget),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                buildDefaultDragHandles: false,
+                                itemCount: res.length,
+                                onReorder: (oldIndex, newIndex) =>
+                                    controller.onReorder(oldIndex, newIndex),
+                              ),
+                            ),
+                            controller.pages,
                           ),
-                          controller.countWord,
                         ),
                       ],
                     ),
                   ),
-                  // write note area
-                  // load task, image if available
-                  Expanded(
-                    flex: 8,
-                    child: ObxValue<RxList<NoteComponnent>>(
-                      (res) => Container(
-                        width: Get.width,
-                        child: ReorderableListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              key: Key('$index'),
-                              behavior: HitTestBehavior.translucent,
-                              //onLongPress: () => controller.triggerRearrangeMode(),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Expanded(child: res[index].widget),
-                                  /*ObxValue(
-                                (res) {
-                                  return res.value
-                                      ? ReorderableDragStartListener(
-                                          index: index,
-                                          child: Icon(
-                                            EvaIcons.moreVerticalOutline,
-                                            size: 15,
-                                          ),
-                                        )
-                                      : SizedBox();
-                                },
-                                controller.rearrangeMode,
-                              ),*/
-                                ],
-                              ),
-                            );
-                          },
-                          buildDefaultDragHandles: false,
-                          itemCount: res.length,
-                          onReorder: (oldIndex, newIndex) =>
-                              controller.onReorder(oldIndex, newIndex),
-                        ),
-                      ),
-                      controller.pages,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
+                ),
+              );
+            }));
       },
     );
   }

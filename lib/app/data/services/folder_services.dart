@@ -9,14 +9,16 @@ class FolderServices {
   BaseServices _baseServices = BaseServices();
 
   List<NoteFolder> getFolder() {
-    return folderBox.values.toList();
+    return folderBox.values
+        .map((e) => e.copyWith(isPrivate: _baseServices.isFolderPrivate(e.id)))
+        .toList();
   }
 
   List<Note> getNoteByFolderId(String id) {
     return _baseServices.getNoteByFolderId(id);
   }
 
-  void add(String name, {bool isPrivate, String pwd}) {
+  void add(String name, {bool isPrivate = false, String pwd = ''}) {
     _baseServices.addFolder(name, isPrivate: isPrivate, pwd: pwd);
   }
 

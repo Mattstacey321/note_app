@@ -1,5 +1,4 @@
 // 1 to many note - folder
-import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
 part 'note_rel.g.dart';
@@ -10,5 +9,5 @@ class NoteRel {
   String noteId;
   @HiveField(1)
   String folderId;
-  NoteRel({@required this.noteId, @required this.folderId});
+  NoteRel({required this.noteId, required this.folderId});
 }

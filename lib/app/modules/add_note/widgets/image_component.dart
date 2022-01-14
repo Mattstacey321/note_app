@@ -6,14 +6,13 @@ import 'package:get/get.dart';
 import 'package:note_app/app/modules/add_note/controllers/image_component_controller.dart';
 
 class ImageComponent extends StatefulWidget {
-  ImageComponent({Key key}) : super(key: key);
+  ImageComponent({Key? key}) : super(key: key);
 
   @override
   _ImageComponentState createState() => _ImageComponentState();
 }
 
 class _ImageComponentState extends State<ImageComponent> with AutomaticKeepAliveClientMixin {
-
   @override
   void initState() {
     super.initState();

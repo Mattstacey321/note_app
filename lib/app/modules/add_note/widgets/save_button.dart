@@ -13,7 +13,7 @@ class SaveButton extends GetView<AddNoteController> {
       children: [
         CircleIcon(
           onTap: () {
-            controller.lockNote();
+            addToFolderCtrl.createFolder();
           },
           tooltip: "Add folder",
           icon: Icon(
@@ -22,7 +22,7 @@ class SaveButton extends GetView<AddNoteController> {
           ),
         ),
         SizedBox(width: 10),
-        ObxValue(
+        ObxValue<RxBool>(
           (res) {
             return CircleIcon(
               onTap: () {

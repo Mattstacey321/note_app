@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:note_app/app/global_widgets/custom_app_bar.dart';
-import 'package:note_app/app/modules/home/widgets/add_button.dart';
-import 'package:note_app/app/modules/home/widgets/home_menu.dart';
-import 'package:note_app/app/modules/home/widgets/home_tabbar.dart';
+import 'package:note_app/app/global_widgets/index.dart';
+import 'package:note_app/app/modules/home/widgets/index.dart';
 
 import '../controllers/home_controller.dart';
 
@@ -24,10 +22,25 @@ class HomeView extends GetView<HomeController> {
         tabBar: HomeTabbar(),
       ),
       floatingActionButton: AddButton(),
-      body: PageView(
-        controller: controller.pageController,
-        onPageChanged: (pageIndex) => controller.onPageChange(pageIndex),
-        children: controller.tabViews.map<Widget>((Map e) => e["page"]).toList(),
+      body: Stack(
+        children: [
+          Positioned.fill(
+            child: PageView(
+              controller: controller.pageController,
+              onPageChanged: (pageIndex) => controller.onPageChange(pageIndex),
+              children: controller.tabViews.map<Widget>((Map e) => e["page"]).toList(),
+            ),
+          ),
+          // drag area
+          ObxValue<RxBool>(
+            (res) {
+              bool _ = res.value;
+              print("home $_");
+              return DeleteArea();
+            },
+            controller.showDeleteZone,
+          ),
+        ],
       ),
     );
   }

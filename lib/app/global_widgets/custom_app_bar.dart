@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'circle_icon.dart';
 
@@ -7,21 +8,22 @@ class CustomAppBar extends PreferredSize {
   final double height;
   final Widget homeIcon;
   final Widget menu;
-  final VoidCallback onTapBack;
+  final VoidCallback? onTapBack;
   final Color color;
-  final Widget tabBar;
+  final Widget? tabBar;
   final double childPadding;
   final MainAxisAlignment childAlignment;
   CustomAppBar(
-      {@required this.childs,
+      {required this.childs,
       this.height = 50,
       this.menu = const SizedBox(),
       this.color = Colors.transparent,
       this.homeIcon: const Icon(Icons.chevron_left, size: 25),
       this.tabBar,
       this.childAlignment = MainAxisAlignment.center,
-      this.childPadding = 20,
-      this.onTapBack});
+      this.childPadding = 0,
+      this.onTapBack})
+      : super(child: const SizedBox(), preferredSize: Size.fromHeight(height));
 
   @override
   Size get preferredSize => Size.fromHeight(height);
@@ -39,13 +41,16 @@ class CustomAppBar extends PreferredSize {
           Stack(
             alignment: Alignment.center,
             children: [
-              //SizedBox(width: 40),
+              onTapBack == null ? SizedBox() : SizedBox(width: 40),
               Positioned(
-                child: Row(
-                  mainAxisAlignment: childAlignment,
-                  children: [
-                    for (var widget in childs) widget,
-                  ],
+                child: Container(
+                  height: preferredSize.height,
+                  child: Row(
+                    mainAxisAlignment: childAlignment,
+                    children: [
+                      for (var widget in childs) widget,
+                    ],
+                  ),
                 ),
               ),
               Row(
@@ -57,17 +62,17 @@ class CustomAppBar extends PreferredSize {
                       : CircleIcon(
                           tooltip: "Back",
                           onTap: () {
-                            return onTapBack == null ? Navigator.of(context).pop() : onTapBack();
+                            return onTapBack == null ? Get.back() : onTapBack!();
                           },
-                          icon: homeIcon),
+                          icon: Icon(Icons.home)),
                 ],
               ),
               Positioned(right: 0, child: menu)
             ],
           ),
-          tabBar == null ? SizedBox() : SizedBox(height: 20),
+          //tabBar == null ? const SizedBox() : SizedBox(height: 20),
           tabBar == null
-              ? SizedBox()
+              ? const SizedBox()
               : Container(
                   child: tabBar,
                 ),

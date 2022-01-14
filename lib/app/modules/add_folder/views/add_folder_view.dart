@@ -64,7 +64,7 @@ class AddFolderView extends StatelessWidget {
                       children: <Widget>[
                         Text("Private"),
                         Spacer(),
-                        ObxValue(
+                        ObxValue<RxBool>(
                           (res) {
                             return Switch(
                               value: res.value,
@@ -77,7 +77,7 @@ class AddFolderView extends StatelessWidget {
                     ),
                   ),
                   Flexible(
-                    child: ObxValue(
+                    child: ObxValue<RxBool>(
                       (res) {
                         return AnimatedOpacity(
                           duration: 200.milliseconds,
